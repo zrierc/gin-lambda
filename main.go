@@ -18,6 +18,11 @@ var db = make(map[string]string)
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
+	// Set root path
+	r.GET("/", func (c *gin.Context)  {
+		c.JSON(http.StatusOK, gin.H{"data": "hello world"})
+	})
+
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
