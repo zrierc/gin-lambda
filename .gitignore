@@ -29,6 +29,10 @@ go.work
 # Ignore build directory
 .serverless
 
+
+### AWS SAM ###
+.aws-sam
+
 ### OTher ###
 .DS_Store
 
