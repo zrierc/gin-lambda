@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Go-Gin-Zip using lambda-go-api-proxy and AWS SAM
+
+Globals:
+  Function:
+    Timeout: 180
+
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration:
+        Type: REGIONAL
+      StageName: Prod
+      TracingEnabled: True
+
+  GinFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: bootstrap
+      Runtime: go1.x
+      MemorySize: 512
+      Environment:
+        Variables:
+          GIN_MODE: release
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  GinApi:
+    Description: 'API Gateway endpoint URL for Prod stage for Gin function'
+    Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/'
