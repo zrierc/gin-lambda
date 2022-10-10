@@ -32,6 +32,7 @@ go.work
 
 ### AWS SAM ###
 .aws-sam
+samconfig.toml
 
 ### OTher ###
 .DS_Store
