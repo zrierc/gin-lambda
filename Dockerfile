@@ -11,7 +11,7 @@ RUN go mod download
 RUN GOOS=linux CGO_ENABLED=0 go build -o bootstrap .
 
 
-FROM alpine:3.9
+FROM alpine:3.16
 
 RUN apk add ca-certificates
 
