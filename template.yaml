@@ -8,14 +8,32 @@ Globals:
     Timeout: 180
 
 Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration:
+        Type: REGIONAL
+      StageName: Prod
+      TracingEnabled: True
+
   GinFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
       MemorySize: 512
       Events:
-        APIEvent:
-          Type: HttpApi
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /{proxy+}
+            Method: ANY
     Metadata:
       DockerTag: v1
       DockerContext: ./
@@ -24,4 +42,4 @@ Resources:
 Outputs:
   GinApi:
     Description: 'API Gateway endpoint URL for Prod stage for Gin function'
-    Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
+    Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/'
