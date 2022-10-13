@@ -38,7 +38,7 @@ Resources:
         Proxy:
           Type: Api
           Properties:
-            RestApiId: !Ref ApiGatewayA
+            RestApiId: !Ref ApiGateway
             Path: /{proxy+}
             Method: ANY
     Metadata:
@@ -47,4 +47,4 @@ Resources:
 Outputs:
   GinApi:
     Description: 'API Gateway endpoint URL for Prod stage for Gin function'
-    Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/'
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/'
