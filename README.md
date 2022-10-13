@@ -43,6 +43,12 @@ This project is intended to be deployed to [AWS Lambda](https://aws.amazon.com/l
 
 **Check out each branch of this repository to learn more about each deployment.**
 
+> The project is hosted and working fine on AWS Lambda as it runs with HTTP 1.0/1.1.
+>
+> In a nutshell, Lambda will run if triggered by event(s). On such event(s), AWS will spawn up lightweight Virtual Machine, load and execute the user-defined Lambda function, return the computed response, and kill the VM. While [gRPC](https://grpc.io/), need an active server. So, until now it is possible to make Lambda a [gRPC](https://grpc.io/) client, but not as a [gRPC](https://grpc.io/) server.
+>
+> Please read [this article](https://aws.plainenglish.io/invoking-aws-lambda-with-grpc-protobuf-431483a869e8) to learn more about AWS Lambda with gRPC. [This coinbase blog](https://blog.coinbase.com/grpc-to-aws-lambda-is-it-possible-4b29a9171d7f) explains well the different approaches they tried to achieve for combining gRPC and Lambda.
+
 ## References
 
 Here are the resources that might help to learn more about each deployment method:
