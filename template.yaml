@@ -8,10 +8,18 @@ Globals:
     Timeout: 180
 
 Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      EndpointConfiguration:
+        Type: REGIONAL
+      StageName: Prod
+      TracingEnabled: True
+
   GinFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./app
+      CodeUri: ./
       Handler: bootstrap
       Runtime: provided.al2
       MemorySize: 512
@@ -21,12 +29,22 @@ Resources:
       Layers:
         - !Sub arn:aws:lambda:${AWS::Region}:753240598075:layer:LambdaAdapterLayerX86:7
       Events:
-        APIEvent:
-          Type: HttpApi
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayA
+            Path: /{proxy+}
+            Method: ANY
     Metadata:
       BuildMethod: makefile
 
 Outputs:
   GinApi:
     Description: 'API Gateway endpoint URL for Prod stage for Gin function'
-    Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
+    Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/'
